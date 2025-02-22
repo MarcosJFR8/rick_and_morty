@@ -1,10 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-const characters = ref([])
+const characters:any = ref([])
 const page:any = ref(1)
 const router = useRouter()
+const searchName = ref('')
+const searchStatus = ref('All')
+
+const statusFilters = ['All', 'Alive', 'Dead', 'unknown']
+
+const filteredCharacters = computed(() => {
+  return characters.value.filter((character: any)=>{
+    const matchName = character.name.toLowerCase().includes(searchName.value.toLowerCase())
+    return matchName
+  })
+})
+
+const searchByStatus = (status: string)=>{
+  searchStatus.value = status
+  console.log(status)
+}
+
 
 const loadCharacters = async () => {
   const response = await fetch(`https://rickandmortyapi.com/api/character?page=${page.value}`)
@@ -43,6 +60,13 @@ onMounted(() => {
       </h1>
     </div>
 
+    <input class="border-blue-900 border-2 px-4 py-2" v-model="searchName" type="text">
+
+    <button v-for="status in statusFilters" :class= "['bg-black text-white p2 rounded-full', 
+    searchStatus === status ? 'bg-red-500' : 'bg-black']" 
+    @click="searchByStatus(status)"> {{ status }} 
+    </button>
+
     <div class="flex justify-center mt-2">
       <button class="text-white bg-green-900 border-2 border-black rounded-sm p-2 mr-3" @click="incrementPage">+</button>
       {{ page }}
@@ -50,7 +74,7 @@ onMounted(() => {
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-7 mt-24 mx-10">
-      <div v-for="character in characters" :key="character.id" class="rounded-2xl overflow-hidden shadow-2xl">
+      <div v-for="character in filteredCharacters" :key="character.id" class="rounded-2xl overflow-hidden shadow-2xl">
         <div @click="seeCharacterDetails(character.id)">
           <img class="rounded-t-3xl" :src="character.image" alt="character.name">
             <div class="m-4 text-center">
