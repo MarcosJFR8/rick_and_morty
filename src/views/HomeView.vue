@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref, } from 'vue'
 import { useRouter } from 'vue-router'
+import type { Character } from '@/types/character'
 
-const characters:any = ref([])
-const page:any = ref(1)
+
+const page = ref<number>(1)
 const router = useRouter()
-const searchName = ref('')
-const searchStatus = ref('')
-const nextPage = ref()
+const characters = ref<Character[]>([])
+const searchName = ref<string>('')
+const searchStatus = ref<string>('')
+const nextPage = ref<number>()
 const statusFilters = ['', 'Alive', 'Dead', 'unknown']
 
 
