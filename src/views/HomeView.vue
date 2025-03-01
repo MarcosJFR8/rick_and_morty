@@ -60,7 +60,7 @@ onMounted(() => {
       </h1>
     </div>
 
-    <input class="border-blue-900 border-2 px-4 py-2" v-model="searchName" type="text">
+    <input class="border-blue-900 border-2 px-4 py-2 justify object-top " v-model="searchName" type="text">
 
     <button v-for="status in statusFilters" :class= "['bg-black text-white p2 rounded-full', 
     searchStatus === status ? 'bg-red-500' : 'bg-black']" 
