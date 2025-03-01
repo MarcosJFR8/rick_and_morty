@@ -13,7 +13,8 @@ const statusFilters = ['All', 'Alive', 'Dead', 'unknown']
 const filteredCharacters = computed(() => {
   return characters.value.filter((character: any)=>{
     const matchName = character.name.toLowerCase().includes(searchName.value.toLowerCase())
-    return matchName
+    const matchStatus = searchStatus.value === 'All' || character.status === searchStatus.value
+    return matchName && matchStatus
   })
 })
 
@@ -60,12 +61,16 @@ onMounted(() => {
       </h1>
     </div>
 
-    <input class="border-blue-900 border-2 px-4 py-2 justify object-top " v-model="searchName" type="text">
 
-    <button v-for="status in statusFilters" :class= "['bg-black text-white p2 rounded-full', 
-    searchStatus === status ? 'bg-red-500' : 'bg-black']" 
-    @click="searchByStatus(status)"> {{ status }} 
-    </button>
+  <div class="flex flex-col items-center mt-8">
+      <input class="border-blue-900 border-2 justify object-top " v-model="searchName" type="text">
+      <div class="flex space-x-4 mt-4">
+        <button v-for="status in statusFilters" :class= "['bg-black text-white p2 rounded-full', 
+          searchStatus === status ? 'bg-red-500' : 'bg-black']" 
+          @click="searchByStatus(status)"> {{ status }} 
+        </button>
+      </div>
+  </div>
 
     <div class="flex justify-center mt-2">
       <button class="text-white bg-green-900 border-2 border-black rounded-sm p-2 mr-3" @click="incrementPage">+</button>
